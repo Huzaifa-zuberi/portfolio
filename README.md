@@ -12,7 +12,7 @@ dark/light theme toggle and a mobile menu.
 
 ## Live Site
 
-Deployed with GitHub Pages: `https://huzaifazuberi.github.io/portfolio/`
+Deployed with GitHub Pages: `https://huzaifa-zuberi.github.io/portfolio/`
 
 ## Local Preview
 
