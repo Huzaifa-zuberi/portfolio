@@ -89,7 +89,16 @@ body {
   font-weight: 800;
   letter-spacing: 0.5px;
   color: var(--ink);
-  margin-bottom: 12px;
+  margin-bottom: 6px;
+}
+
+.cv-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
 }
 
 .cv-contact {
@@ -199,6 +208,8 @@ body {
 @media print {
   body {
     background: #fff;
+    font-size: 10pt;
+    line-height: 1.38;
   }
 
   .toolbar {
@@ -208,13 +219,62 @@ body {
   .cv-page {
     box-shadow: none;
     margin: 0;
-    padding: 0.4in;
+    padding: 0;
     max-width: none;
     border-radius: 0;
   }
 
   .cv-header {
-    border-bottom: 3px solid #0284c7;
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
+
+  .cv-header h1 {
+    font-size: 17pt;
+    margin-bottom: 2px;
+  }
+
+  .cv-title {
+    font-size: 10pt;
+    margin-bottom: 8px;
+  }
+
+  .cv-contact {
+    font-size: 8.5pt;
+    gap: 2px 14px;
+  }
+
+  .cv-section {
+    margin-bottom: 12px;
+    break-inside: avoid;
+  }
+
+  .cv-heading {
+    font-size: 10pt;
+    padding-bottom: 3px;
+    margin-bottom: 7px;
+  }
+
+  .cv-entry {
+    margin-bottom: 8px;
+    break-inside: avoid;
+  }
+
+  .cv-entry-head strong {
+    font-size: 10pt;
+  }
+
+  .cv-bullets li,
+  .cv-skill-row,
+  .cv-sub,
+  .cv-notes,
+  .cv-section p {
+    font-size: 9.5pt;
+  }
+
+  .cv-bullets li {
+    margin-bottom: 2px;
   }
 
   a {
@@ -222,13 +282,9 @@ body {
     text-decoration: none;
   }
 
-  .cv-section {
-    break-inside: avoid;
-  }
-
   @page {
     size: A4;
-    margin: 0.5in;
+    margin: 0.45in;
   }
 }
 
