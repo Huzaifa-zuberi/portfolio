@@ -9,7 +9,7 @@ A responsive, single-page portfolio website plus an ATS-optimized resume/CV.
 | Portfolio | `https://huzaifa-zuberi.github.io/portfolio/` |
 | Resume (HTML) | `https://huzaifa-zuberi.github.io/portfolio/resume.html` |
 | Resume (PDF) | `https://huzaifa-zuberi.github.io/portfolio/HuzaifaZuberi_CV.pdf` |
-| Resume (Word) | `https://huzaifa-zuberi.github.io/portfolio/Huzaifa_Zuberi_CV.docx` |
+| Resume (Word source) | `https://huzaifa-zuberi.github.io/portfolio/Huzaifa_Zuberi_CV.docx` |
 
 ## Tech
 
@@ -26,15 +26,9 @@ A responsive, single-page portfolio website plus an ATS-optimized resume/CV.
   embedded in the summary, core competencies, and skills sections.
 - **`resume.css`** — Resume styling. Print rules target A4 with a compact,
   ATS-safe layout (2 pages, no columns, no tables).
-- **`HuzaifaZuberi_CV.pdf`** — Generated from `resume.html`. Regenerate with:
-
-```bash
-chrome --headless --no-pdf-header-footer --virtual-time-budget=15000 \
-  --print-to-pdf=./HuzaifaZuberi_CV.pdf "file:///<abs-path>/resume.html"
-```
-
-The PDF is plain ASCII with no raster images so applicant tracking systems can
-extract the text reliably.
+- **`HuzaifaZuberi_CV.pdf`** — PDF conversion of `Huzaifa_Zuberi_CV.docx`, generated with
+  Microsoft Word so the original document formatting is preserved. This is the file the
+  "Download CV" button serves. Re-export from Word after editing the `.docx`.
 
 ## Local Preview
 
