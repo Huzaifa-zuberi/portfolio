@@ -89,16 +89,7 @@ body {
   font-weight: 800;
   letter-spacing: 0.5px;
   color: var(--ink);
-  margin-bottom: 6px;
-}
-
-.cv-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .cv-contact {
@@ -237,11 +228,6 @@ body {
 
   .cv-header h1 {
     font-size: 17pt;
-    margin-bottom: 2px;
-  }
-
-  .cv-title {
-    font-size: 10pt;
     margin-bottom: 8px;
   }
 
