@@ -9,6 +9,7 @@ A responsive, single-page portfolio website plus an ATS-optimized resume/CV.
 | Portfolio | `https://huzaifa-zuberi.github.io/portfolio/` |
 | Resume (HTML) | `https://huzaifa-zuberi.github.io/portfolio/resume.html` |
 | Resume (PDF) | `https://huzaifa-zuberi.github.io/portfolio/HuzaifaZuberi_CV.pdf` |
+| Resume (Word) | `https://huzaifa-zuberi.github.io/portfolio/Huzaifa_Zuberi_CV.docx` |
 
 ## Tech
 
