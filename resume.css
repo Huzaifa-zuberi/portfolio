@@ -176,6 +176,11 @@ body {
   font-size: 0.9rem;
 }
 
+.cv-availability {
+  margin-top: 6px;
+  font-size: 0.9rem;
+}
+
 .cv-bullets {
   padding-left: 20px;
   margin-top: 4px;
