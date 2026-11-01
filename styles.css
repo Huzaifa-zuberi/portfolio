@@ -470,6 +470,12 @@ body {
   color: var(--accent);
 }
 
+.project-foot {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
 .project-foot a {
   color: var(--accent);
   text-decoration: none;
