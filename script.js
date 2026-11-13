@@ -6,6 +6,7 @@ function setTheme(theme) {
   document.body.classList.toggle("light", theme === "light");
   localStorage.setItem("theme", theme);
   icon.className = theme === "light" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+  toggle.setAttribute("aria-pressed", String(theme === "light"));
 }
 
 setTheme(localStorage.getItem("theme") || "dark");
@@ -14,23 +15,30 @@ toggle.addEventListener("click", () => {
   setTheme(document.body.classList.contains("light") ? "dark" : "light");
 });
 
-/* Mobile menu */
-let menuToggleCreated = false;
 const navLinks = document.querySelector(".nav-links");
-const navInner = document.querySelector(".nav-inner");
+const menuToggle = document.getElementById("menuToggle");
 
-if (window.innerWidth <= 768 && !menuToggleCreated) {
-  const btn = document.createElement("button");
-  btn.className = "menu-toggle";
-  btn.setAttribute("aria-label", "Menu");
-  btn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-  navInner.appendChild(btn);
-  menuToggleCreated = true;
-  btn.addEventListener("click", () => navLinks.classList.toggle("open"));
-  navLinks.querySelectorAll("a").forEach((a) =>
-    a.addEventListener("click", () => navLinks.classList.remove("open"))
-  );
+function closeMenu() {
+  navLinks.classList.remove("open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Open navigation menu");
+  menuToggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
 }
+
+menuToggle.addEventListener("click", () => {
+  const isOpen = navLinks.classList.toggle("open");
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+  menuToggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+  menuToggle.innerHTML = `<i class="fa-solid fa-${isOpen ? "xmark" : "bars"}" aria-hidden="true"></i>`;
+});
+
+navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeMenu();
+});
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 768) closeMenu();
+});
 
 /* Footer year */
 document.getElementById("year").textContent = new Date().getFullYear();

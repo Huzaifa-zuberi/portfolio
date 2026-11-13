@@ -67,6 +67,12 @@ body {
   background: #7dd3fc;
 }
 
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 /* ---------- Page ---------- */
 .cv-page {
   max-width: 860px;

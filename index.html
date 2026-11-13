@@ -22,7 +22,10 @@
   <header class="nav">
     <div class="nav-inner">
       <a href="#top" class="brand">HZ<span>.</span></a>
-      <nav class="nav-links">
+      <button id="menuToggle" class="menu-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="siteNavigation">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+      <nav id="siteNavigation" class="nav-links">
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
@@ -30,7 +33,7 @@
         <a href="#contact">Contact</a>
         <a href="resume.html">Resume</a>
       </nav>
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme" aria-pressed="false">
         <i class="fa-solid fa-moon"></i>
       </button>
     </div>
@@ -40,22 +43,29 @@
     <section class="hero">
       <div class="hero-bg" aria-hidden="true"></div>
       <div class="hero-inner">
-        <p class="hero-greeting">Hello, I'm</p>
-        <h1 class="hero-name">Huzaifa Zuberi</h1>
-        <h2 class="hero-role">Flutter Developer &amp; Full-Stack Engineer</h2>
-        <p class="hero-desc">
-          Computer Science student building full-stack web apps, Flutter applications,
-          and machine-learning projects — including a free open-source mosque app serving
-          1,000,000+ locations worldwide. Open to Software Engineering, Flutter, and ML
-          Engineering roles — available immediately.
-        </p>
-        <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary">View My Work</a>
-          <a href="#contact" class="btn btn-outline">Get in Touch</a>
-          <a href="resume.html" class="btn btn-outline"><i class="fa-solid fa-file"></i> Resume</a>
-          <a href="HuzaifaZuberi_CV.pdf" class="btn btn-outline" download><i class="fa-solid fa-download"></i> Download CV</a>
+        <div class="hero-profile">
+          <div class="hero-copy">
+            <p class="hero-greeting">Hello, I'm</p>
+            <h1 class="hero-name">Huzaifa Zuberi</h1>
+            <h2 class="hero-role">Flutter Developer &amp; Full-Stack Engineer</h2>
+            <p class="hero-desc">
+              Computer Science student building full-stack web apps, Flutter applications,
+              and machine-learning projects — including a free open-source mosque app serving
+              1,000,000+ locations worldwide. Open to Software Engineering, Flutter, and ML
+              Engineering roles — available immediately.
+            </p>
+            <div class="hero-actions">
+              <a href="#projects" class="btn btn-primary">View My Work</a>
+              <a href="#contact" class="btn btn-outline">Get in Touch</a>
+              <a href="resume.html#download" class="btn btn-outline"><i class="fa-solid fa-file-arrow-down"></i> Get Resume</a>
+            </div>
+          </div>
+          <figure class="profile-frame">
+            <img src="assets/huzaifa-zuberi-profile.jpg" alt="Portrait of Huzaifa Zuberi" class="profile-photo" width="1189" height="1323" fetchpriority="high" />
+            <figcaption><span class="availability-dot" aria-hidden="true"></span> Open to opportunities</figcaption>
+          </figure>
         </div>
-        <div class="hero-socials">
+        <div class="hero-socials" aria-label="Social links">
           <a href="https://linkedin.com/in/huzaifazuberi" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
           <a href="https://github.com/huzaifazuberi" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
           <a href="mailto:mhuzaifazuberi@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
