@@ -150,6 +150,8 @@ body {
 
 .profile-frame {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: min(100%, 230px);
   justify-self: center;
   padding: 8px;
@@ -162,19 +164,18 @@ body {
 .profile-photo {
   display: block;
   width: 100%;
-  aspect-ratio: 1189 / 1323;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 15px;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 .profile-frame figcaption {
-  position: absolute;
-  right: 0;
-  bottom: 26px;
   display: flex;
+  align-self: center;
   align-items: center;
   gap: 9px;
+  margin-top: 12px;
   padding: 10px 14px;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -844,6 +845,6 @@ body {
   .container { padding: 0 18px; }
   .hero { padding-left: 18px; padding-right: 18px; }
   .btn { padding: 11px 16px; font-size: .9rem; }
-  .profile-frame figcaption { right: -8px; bottom: 18px; font-size: .72rem; }
+  .profile-frame figcaption { margin-top: 10px; font-size: .72rem; }
   .section-title { font-size: 1.7rem; }
 }
