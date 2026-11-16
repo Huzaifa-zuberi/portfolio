@@ -15,6 +15,77 @@ toggle.addEventListener("click", () => {
   setTheme(document.body.classList.contains("light") ? "dark" : "light");
 });
 
+/* Reveal content as it enters view; content stays visible when motion is reduced. */
+const revealPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+const revealTargets = document.querySelectorAll(
+  ".section-title, .about-stat, .skill-group, .project-card, .exp-item, .contact-card, .contact-form, .canva-card"
+);
+
+if (!revealPreference.matches && "IntersectionObserver" in window) {
+  document.body.classList.add("motion-enabled");
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.14, rootMargin: "0px 0px -36px 0px" });
+
+  revealTargets.forEach((element, index) => {
+    element.classList.add("reveal-target");
+    element.style.setProperty("--reveal-delay", `${(index % 5) * 70}ms`);
+    revealObserver.observe(element);
+  });
+}
+
+/* Scroll-linked page progress, updated at most once per animation frame. */
+const scrollProgress = document.getElementById("scrollProgress");
+
+if (scrollProgress) {
+  let progressFrame = 0;
+  const updateProgress = () => {
+    if (progressFrame) return;
+    progressFrame = window.requestAnimationFrame(() => {
+      const scrollableHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, window.scrollY / scrollableHeight));
+      scrollProgress.style.setProperty("--scroll-progress", progress);
+      progressFrame = 0;
+    });
+  };
+
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  window.addEventListener("resize", updateProgress, { passive: true });
+  updateProgress();
+}
+
+/* Pointer-following card light on fine-pointer devices only. */
+if (!revealPreference.matches && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  document.querySelectorAll(".project-card").forEach((card) => {
+    let pointerFrame = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    card.addEventListener("pointermove", (event) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (pointerFrame) return;
+
+      pointerFrame = window.requestAnimationFrame(() => {
+        const bounds = card.getBoundingClientRect();
+        card.style.setProperty("--pointer-x", `${pointerX - bounds.left}px`);
+        card.style.setProperty("--pointer-y", `${pointerY - bounds.top}px`);
+        pointerFrame = 0;
+      });
+    }, { passive: true });
+
+    card.addEventListener("pointerleave", () => {
+      card.style.removeProperty("--pointer-x");
+      card.style.removeProperty("--pointer-y");
+    });
+  });
+}
+
 /* Decorative canvas: low-motion network lines, paused when hidden or reduced-motion is enabled. */
 const heroCanvas = document.getElementById("heroCanvas");
 
@@ -54,7 +125,7 @@ if (heroCanvas) {
             context.beginPath();
             context.moveTo(point.x, point.y);
             context.lineTo(other.x, other.y);
-            context.strokeStyle = `rgba(56, 189, 248, ${(1 - distance / linkDistance) * 0.16})`;
+            context.strokeStyle = `rgba(194, 243, 107, ${(1 - distance / linkDistance) * 0.16})`;
             context.lineWidth = 1;
             context.stroke();
           }
@@ -62,7 +133,7 @@ if (heroCanvas) {
 
         context.beginPath();
         context.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
-        context.fillStyle = "rgba(125, 211, 252, 0.58)";
+        context.fillStyle = "rgba(216, 248, 166, 0.58)";
         context.fill();
       }
     }
