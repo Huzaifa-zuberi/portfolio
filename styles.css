@@ -1239,16 +1239,9 @@ body { line-height: 1.72; }
 .hero-copy > *:nth-child(4) { animation-delay: 270ms; }
 .hero-copy > *:nth-child(5) { animation-delay: 340ms; }
 
-.profile-frame { animation: portrait-float 8s ease-in-out infinite; }
-
 @keyframes rise-in {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes portrait-float {
-  0%, 100% { translate: 0 0; }
-  50% { translate: 0 -8px; }
 }
 
 .motion-enabled .reveal-target {
@@ -1340,23 +1333,8 @@ body { line-height: 1.72; }
   transition: transform .22s cubic-bezier(.2, .7, .25, 1);
 }
 
-.profile-frame::after {
-  position: absolute;
-  z-index: 0;
-  inset: -18px;
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
-  border-radius: 34px;
-  content: "";
-  pointer-events: none;
-  animation: orbit-ring 24s linear infinite;
-}
-
 .profile-photo { transform: translateZ(16px); }
 .profile-frame figcaption { transform: translateZ(24px); }
-
-@keyframes orbit-ring {
-  to { transform: rotate(360deg); }
-}
 
 .project-card {
   transform-style: preserve-3d;
@@ -1396,7 +1374,6 @@ body { line-height: 1.72; }
 .hero-actions .btn:hover::after { transform: skewX(-18deg) translateX(390%); }
 
 @media (prefers-reduced-motion: reduce) {
-  .profile-frame::after { animation: none !important; }
   .hero-actions .btn::after { display: none; }
   .hero { transition: none !important; }
 }
