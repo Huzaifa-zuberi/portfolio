@@ -18,7 +18,7 @@
     <div class="toolbar-inner">
       <a href="index.html" class="toolbar-link"><i class="fa-solid fa-arrow-left"></i> Portfolio</a>
       <div class="toolbar-actions" id="download">
-        <button id="printBtn" class="toolbar-btn"><i class="fa-solid fa-download"></i> Download as PDF</button>
+        <a href="HuzaifaZuberiResume.pdf" download="HuzaifaZuberiResume.pdf" class="toolbar-btn"><i class="fa-solid fa-download"></i> Download Resume PDF</a>
         <button id="printBtnSecondary" class="toolbar-btn"><i class="fa-solid fa-print"></i> Print</button>
       </div>
     </div>
@@ -163,10 +163,8 @@
   </main>
 
   <script>
-    ["printBtn", "printBtnSecondary"].forEach((id) => {
-      document.getElementById(id).addEventListener("click", function () {
-        window.print();
-      });
+    document.getElementById("printBtnSecondary").addEventListener("click", function () {
+      window.print();
     });
   </script>
 </body>

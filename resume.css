@@ -52,6 +52,9 @@ body {
 }
 
 .toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: #38bdf8;
   color: #0f172a;
   border: none;
@@ -61,6 +64,7 @@ body {
   font-size: 0.9rem;
   cursor: pointer;
   font-family: inherit;
+  text-decoration: none;
 }
 
 .toolbar-btn:hover {
