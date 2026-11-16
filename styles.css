@@ -1247,8 +1247,8 @@ body { line-height: 1.72; }
 }
 
 @keyframes portrait-float {
-  0%, 100% { transform: translateY(0) rotate(2deg); }
-  50% { transform: translateY(-8px) rotate(1deg); }
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -8px; }
 }
 
 .motion-enabled .reveal-target {
@@ -1324,3 +1324,79 @@ body { line-height: 1.72; }
 .project-card > * { position: relative; z-index: 1; }
 .project-card::before { z-index: 2; }
 .project-card:hover::after { opacity: 1; }
+
+/* ---------- Cursor-reactive 3D details ---------- */
+.hero {
+  background:
+    radial-gradient(620px circle at var(--hero-pointer-x, 78%) var(--hero-pointer-y, 36%), color-mix(in srgb, var(--accent) 12%, transparent), transparent 72%),
+    radial-gradient(ellipse at 78% 36%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 36%),
+    linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 84%, var(--bg-alt)));
+  transition: background-position .25s ease-out;
+}
+
+.profile-frame {
+  transform: perspective(950px) rotateX(var(--portrait-tilt-x, 0deg)) rotateY(var(--portrait-tilt-y, 0deg)) rotate(2deg);
+  transform-style: preserve-3d;
+  transition: transform .22s cubic-bezier(.2, .7, .25, 1);
+}
+
+.profile-frame::after {
+  position: absolute;
+  z-index: 0;
+  inset: -18px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  border-radius: 34px;
+  content: "";
+  pointer-events: none;
+  animation: orbit-ring 24s linear infinite;
+}
+
+.profile-photo { transform: translateZ(16px); }
+.profile-frame figcaption { transform: translateZ(24px); }
+
+@keyframes orbit-ring {
+  to { transform: rotate(360deg); }
+}
+
+.project-card {
+  transform-style: preserve-3d;
+  transition: transform .24s cubic-bezier(.2, .7, .25, 1), box-shadow .25s ease, border-color .25s ease;
+}
+
+.project-card:hover {
+  transform: perspective(1100px) rotateX(var(--card-tilt-x, 0deg)) rotateY(var(--card-tilt-y, 0deg)) translateY(-8px) scale(1.012);
+}
+
+.project-card > * { transform: translateZ(12px); }
+
+.hero-actions .btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform .16s ease-out, box-shadow .25s ease;
+}
+
+.hero-actions .btn:hover {
+  transform: translate(var(--magnet-x, 0px), calc(var(--magnet-y, 0px) - 2px));
+}
+
+.hero-actions .btn::after {
+  position: absolute;
+  z-index: 0;
+  top: -40%;
+  bottom: -40%;
+  left: 0;
+  width: 36%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .32), transparent);
+  content: "";
+  transform: skewX(-18deg) translateX(-180%);
+  transition: transform .7s cubic-bezier(.2, .7, .25, 1);
+  pointer-events: none;
+}
+
+.hero-actions .btn:hover::after { transform: skewX(-18deg) translateX(390%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-frame::after { animation: none !important; }
+  .hero-actions .btn::after { display: none; }
+  .hero { transition: none !important; }
+}

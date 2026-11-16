@@ -61,6 +61,72 @@ if (scrollProgress) {
 
 /* Pointer-following card light on fine-pointer devices only. */
 if (!revealPreference.matches && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  const hero = document.querySelector(".hero");
+  const portrait = document.querySelector(".profile-frame");
+  const heroCanvas = document.getElementById("heroCanvas");
+
+  if (hero) {
+    let heroPointerFrame = 0;
+    let heroPointerX = 0;
+    let heroPointerY = 0;
+
+    hero.addEventListener("pointermove", (event) => {
+      heroPointerX = event.clientX;
+      heroPointerY = event.clientY;
+      if (heroPointerFrame) return;
+
+      heroPointerFrame = window.requestAnimationFrame(() => {
+        heroPointerFrame = 0;
+        const heroBounds = hero.getBoundingClientRect();
+        const x = (heroPointerX - heroBounds.left) / heroBounds.width;
+        const y = (heroPointerY - heroBounds.top) / heroBounds.height;
+        hero.style.setProperty("--hero-pointer-x", `${(x * 100).toFixed(1)}%`);
+        hero.style.setProperty("--hero-pointer-y", `${(y * 100).toFixed(1)}%`);
+
+        if (portrait) {
+          const bounds = portrait.getBoundingClientRect();
+          const clampTilt = (value) => Math.max(-4, Math.min(4, value));
+          const tiltX = clampTilt(((heroPointerY - bounds.top) / bounds.height - 0.5) * -8);
+          const tiltY = clampTilt(((heroPointerX - bounds.left) / bounds.width - 0.5) * 8);
+          portrait.style.setProperty("--portrait-tilt-x", `${tiltX.toFixed(2)}deg`);
+          portrait.style.setProperty("--portrait-tilt-y", `${tiltY.toFixed(2)}deg`);
+        }
+
+        if (heroCanvas) {
+          const bounds = heroCanvas.getBoundingClientRect();
+          heroCanvas.dispatchEvent(new CustomEvent("hero-pointer", {
+            detail: { x: heroPointerX - bounds.left, y: heroPointerY - bounds.top },
+          }));
+        }
+      });
+    }, { passive: true });
+
+    hero.addEventListener("pointerleave", () => {
+      if (heroPointerFrame) window.cancelAnimationFrame(heroPointerFrame);
+      heroPointerFrame = 0;
+      hero.style.removeProperty("--hero-pointer-x");
+      hero.style.removeProperty("--hero-pointer-y");
+      if (portrait) {
+        portrait.style.removeProperty("--portrait-tilt-x");
+        portrait.style.removeProperty("--portrait-tilt-y");
+      }
+      if (heroCanvas) heroCanvas.dispatchEvent(new CustomEvent("hero-pointer-leave"));
+    });
+  }
+
+  document.querySelectorAll(".hero-actions .btn").forEach((button) => {
+    button.addEventListener("pointermove", (event) => {
+      const bounds = button.getBoundingClientRect();
+      button.style.setProperty("--magnet-x", `${((event.clientX - bounds.left) / bounds.width - 0.5) * 8}px`);
+      button.style.setProperty("--magnet-y", `${((event.clientY - bounds.top) / bounds.height - 0.5) * 8}px`);
+    }, { passive: true });
+
+    button.addEventListener("pointerleave", () => {
+      button.style.removeProperty("--magnet-x");
+      button.style.removeProperty("--magnet-y");
+    });
+  });
+
   document.querySelectorAll(".project-card").forEach((card) => {
     let pointerFrame = 0;
     let pointerX = 0;
@@ -75,6 +141,10 @@ if (!revealPreference.matches && window.matchMedia("(hover: hover) and (pointer:
         const bounds = card.getBoundingClientRect();
         card.style.setProperty("--pointer-x", `${pointerX - bounds.left}px`);
         card.style.setProperty("--pointer-y", `${pointerY - bounds.top}px`);
+        const tiltX = ((pointerY - bounds.top) / bounds.height - 0.5) * -7;
+        const tiltY = ((pointerX - bounds.left) / bounds.width - 0.5) * 7;
+        card.style.setProperty("--card-tilt-x", `${tiltX.toFixed(2)}deg`);
+        card.style.setProperty("--card-tilt-y", `${tiltY.toFixed(2)}deg`);
         pointerFrame = 0;
       });
     }, { passive: true });
@@ -82,6 +152,8 @@ if (!revealPreference.matches && window.matchMedia("(hover: hover) and (pointer:
     card.addEventListener("pointerleave", () => {
       card.style.removeProperty("--pointer-x");
       card.style.removeProperty("--pointer-y");
+      card.style.removeProperty("--card-tilt-x");
+      card.style.removeProperty("--card-tilt-y");
     });
   });
 }
@@ -99,12 +171,33 @@ if (heroCanvas) {
     let particles = [];
     let animationFrame = 0;
     let lastFrame = 0;
+    let pointer = null;
+
+    heroCanvas.addEventListener("hero-pointer", (event) => {
+      pointer = event.detail;
+    });
+    heroCanvas.addEventListener("hero-pointer-leave", () => {
+      pointer = null;
+    });
 
     function drawNetwork(moveParticles) {
       context.clearRect(0, 0, canvasWidth, canvasHeight);
 
       particles.forEach((particle) => {
         if (moveParticles) {
+          if (pointer) {
+            const dx = particle.x - pointer.x;
+            const dy = particle.y - pointer.y;
+            const distance = Math.max(1, Math.hypot(dx, dy));
+            const influence = 170;
+            if (distance < influence) {
+              const force = ((influence - distance) / influence) * 0.12;
+              particle.vx += (dx / distance) * force;
+              particle.vy += (dy / distance) * force;
+            }
+          }
+          particle.vx *= 0.995;
+          particle.vy *= 0.995;
           particle.x += particle.vx;
           particle.y += particle.vy;
           if (particle.x < 0) particle.x = canvasWidth;
