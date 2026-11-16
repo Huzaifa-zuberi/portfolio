@@ -345,3 +345,34 @@ form.addEventListener("submit", (e) => {
   status.textContent = "Opening your email app to send the message...";
   status.className = "form-status";
 });
+
+/* Contact reveal card -> copy email */
+const emailRevealCard = document.getElementById("emailRevealCard");
+const emailRevealStatus = document.getElementById("emailRevealStatus");
+
+emailRevealCard?.addEventListener("click", async () => {
+  const address = "mhuzaifazuberi@gmail.com";
+  let copied = false;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(address);
+      copied = true;
+    }
+  } catch { /* Try the browser's legacy copy path below. */ }
+
+  if (!copied) {
+    const field = document.createElement("textarea");
+    field.value = address;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.append(field);
+    field.select();
+    try { copied = document.execCommand("copy"); } catch { copied = false; }
+    field.remove();
+  }
+
+  emailRevealStatus.textContent = copied
+    ? "Email copied to clipboard."
+    : `Unable to copy. Email: ${address}`;
+});
