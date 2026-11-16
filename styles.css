@@ -1543,3 +1543,89 @@ body { line-height: 1.72; }
   .email-reveal-text:first-child { opacity: 0; }
   .email-reveal-text:last-child { opacity: 1; transform: none; }
 }
+
+/* ---------- Interactive portrait and staggered skills ---------- */
+.profile-photo-control {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.profile-photo-control:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 5px;
+}
+
+.profile-photo {
+  transition: transform .36s cubic-bezier(.2, .7, .25, 1), filter .36s ease;
+}
+
+.profile-photo-control:hover .profile-photo,
+.profile-photo-control:focus-visible .profile-photo {
+  filter: saturate(1.08) brightness(1.025);
+  transform: translateZ(16px) scale(1.035);
+}
+
+.profile-frame figcaption {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  white-space: normal;
+}
+
+.profile-caption-status,
+.profile-ripple-cue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.profile-ripple-cue {
+  color: var(--accent);
+  font-size: .7rem;
+  font-weight: 500;
+  opacity: .82;
+}
+
+.profile-ripple-cue i { font-size: .67rem; }
+
+.motion-enabled .skill-group .tag-list li {
+  opacity: 0;
+  transform: translateY(8px) scale(.96);
+  transition:
+    opacity .32s ease var(--chip-delay, 0ms),
+    transform .38s cubic-bezier(.2, .7, .25, 1) var(--chip-delay, 0ms);
+}
+
+.motion-enabled .skill-group.is-visible .tag-list li {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.about-stat.is-visible .stat-num {
+  display: inline-block;
+  animation: stat-pop .58s cubic-bezier(.2, .7, .25, 1) both;
+}
+
+@keyframes stat-pop {
+  0% { opacity: .5; transform: translateY(10px) scale(.92); }
+  70% { opacity: 1; transform: translateY(-2px) scale(1.035); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-photo,
+  .motion-enabled .skill-group .tag-list li { transition: none !important; }
+  .profile-photo-control:hover .profile-photo,
+  .profile-photo-control:focus-visible .profile-photo { filter: none; transform: none; }
+  .motion-enabled .skill-group .tag-list li { opacity: 1 !important; transform: none !important; }
+  .about-stat.is-visible .stat-num { animation: none !important; }
+}

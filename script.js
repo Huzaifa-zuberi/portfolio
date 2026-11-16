@@ -35,6 +35,11 @@ if (!revealPreference.matches && "IntersectionObserver" in window) {
   revealTargets.forEach((element, index) => {
     element.classList.add("reveal-target");
     element.style.setProperty("--reveal-delay", `${(index % 5) * 70}ms`);
+    if (element.matches(".skill-group")) {
+      element.querySelectorAll(".tag-list li").forEach((tag, tagIndex) => {
+        tag.style.setProperty("--chip-delay", `${tagIndex * 36}ms`);
+      });
+    }
     revealObserver.observe(element);
   });
 }
@@ -172,6 +177,21 @@ if (heroCanvas) {
     let animationFrame = 0;
     let lastFrame = 0;
     let pointer = null;
+    const rippleWaves = [];
+
+    /* Inspired by Joost Kiens' PixiJS ripple concept; drawn by the existing hero canvas. */
+    heroCanvas.addEventListener("hero-ripple", (event) => {
+      if (reducedMotion.matches) return;
+      rippleWaves.push({
+        x: event.detail.x,
+        y: event.detail.y,
+        startedAt: performance.now(),
+        duration: 1050,
+        maxRadius: Math.hypot(canvasWidth, canvasHeight) * 0.72,
+        color: getComputedStyle(document.body).getPropertyValue("--accent").trim() || "#38bdf8",
+      });
+      if (rippleWaves.length > 3) rippleWaves.shift();
+    });
 
     heroCanvas.addEventListener("hero-pointer", (event) => {
       pointer = event.detail;
@@ -180,11 +200,27 @@ if (heroCanvas) {
       pointer = null;
     });
 
-    function drawNetwork(moveParticles) {
+    function drawNetwork(moveParticles, now = performance.now()) {
       context.clearRect(0, 0, canvasWidth, canvasHeight);
+      for (let index = rippleWaves.length - 1; index >= 0; index -= 1) {
+        if (now - rippleWaves[index].startedAt >= rippleWaves[index].duration) rippleWaves.splice(index, 1);
+      }
 
       particles.forEach((particle) => {
         if (moveParticles) {
+          rippleWaves.forEach((wave) => {
+            const progress = Math.min(1, (now - wave.startedAt) / wave.duration);
+            const radius = (1 - Math.pow(1 - progress, 3)) * wave.maxRadius;
+            const dx = particle.x - wave.x;
+            const dy = particle.y - wave.y;
+            const distance = Math.max(1, Math.hypot(dx, dy));
+            if (Math.abs(distance - radius) < 16) {
+              const impulse = (1 - progress) * 0.12;
+              particle.vx += (dx / distance) * impulse;
+              particle.vy += (dy / distance) * impulse;
+            }
+          });
+
           if (pointer) {
             const dx = particle.x - pointer.x;
             const dy = particle.y - pointer.y;
@@ -205,6 +241,32 @@ if (heroCanvas) {
           if (particle.y < 0) particle.y = canvasHeight;
           if (particle.y > canvasHeight) particle.y = 0;
         }
+      });
+
+      rippleWaves.forEach((wave) => {
+        const progress = Math.min(1, (now - wave.startedAt) / wave.duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const radius = eased * wave.maxRadius;
+        const opacity = (1 - progress) * 0.46;
+
+        context.save();
+        context.globalAlpha = opacity;
+        context.strokeStyle = wave.color;
+        context.lineWidth = 1.8 * (1 - progress) + 0.45;
+        context.shadowColor = wave.color;
+        context.shadowBlur = 16 * (1 - progress);
+        context.beginPath();
+        context.arc(wave.x, wave.y, radius, 0, Math.PI * 2);
+        context.stroke();
+
+        if (progress > 0.14) {
+          const echoProgress = (progress - 0.14) / 0.86;
+          context.globalAlpha = opacity * 0.55;
+          context.beginPath();
+          context.arc(wave.x, wave.y, echoProgress * wave.maxRadius, 0, Math.PI * 2);
+          context.stroke();
+        }
+        context.restore();
       });
 
       for (let first = 0; first < particles.length; first += 1) {
@@ -241,6 +303,7 @@ if (heroCanvas) {
       context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
       const pointCount = Math.min(54, Math.max(18, Math.round((canvasWidth * canvasHeight) / 24000)));
+      rippleWaves.length = 0;
       particles = Array.from({ length: pointCount }, () => ({
         x: Math.random() * canvasWidth,
         y: Math.random() * canvasHeight,
@@ -257,7 +320,7 @@ if (heroCanvas) {
       if (document.hidden || reducedMotion.matches) return;
 
       if (timestamp - lastFrame >= 33) {
-        drawNetwork(true);
+        drawNetwork(true, timestamp);
         lastFrame = timestamp;
       }
 
@@ -266,6 +329,7 @@ if (heroCanvas) {
 
     function startAnimation() {
       if (document.hidden || reducedMotion.matches) {
+        rippleWaves.length = 0;
         drawNetwork(false);
         return;
       }
@@ -288,6 +352,22 @@ if (heroCanvas) {
     reducedMotion.addEventListener("change", refreshAnimation);
   }
 }
+
+/* Portrait ripple action, rendered by the existing canvas without loading another library. */
+const profileRippleButton = document.getElementById("profileRippleButton");
+
+profileRippleButton?.addEventListener("click", (event) => {
+  if (revealPreference.matches || !heroCanvas) return;
+  const canvasBounds = heroCanvas.getBoundingClientRect();
+  const portraitBounds = profileRippleButton.getBoundingClientRect();
+  const hasPointerCoordinates = event.detail > 0;
+  const clientX = hasPointerCoordinates ? event.clientX : portraitBounds.left + portraitBounds.width / 2;
+  const clientY = hasPointerCoordinates ? event.clientY : portraitBounds.top + portraitBounds.height / 2;
+
+  heroCanvas.dispatchEvent(new CustomEvent("hero-ripple", {
+    detail: { x: clientX - canvasBounds.left, y: clientY - canvasBounds.top },
+  }));
+});
 
 const navLinks = document.querySelector(".nav-links");
 const menuToggle = document.getElementById("menuToggle");
